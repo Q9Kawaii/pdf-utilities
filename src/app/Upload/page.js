@@ -78,6 +78,7 @@ export default function UploadPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
+          <h2 className="text-4xl font-semibold mb-6">PDF to Image</h2>
       <div className="flex gap-4 mb-7">
         <input
           type="file"
