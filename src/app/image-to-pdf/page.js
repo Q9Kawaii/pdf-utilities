@@ -99,14 +99,16 @@ export default function ImageToPdfPage() {
       <div className="flex flex-col items-center justify-center h-full">
         <h2 className="text-4xl font-semibold mb-6">Image to PDF</h2>
         <div className="flex gap-4 mb-7">
-          <input
-            type="file"
-            accept="image/jpeg,image/png"
-            multiple
-            onChange={handleImgUpload}
-            className="hidden"
-            id="imgUpload"
-          />
+        <input
+  type="file"
+  accept="image/*"
+  capture="environment"
+  multiple
+  onChange={handleImgUpload}
+  className="hidden"
+  id="imgUpload"
+/>
+
           <label
             htmlFor="imgUpload"
             className="text-xl bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-blue-500 transition cursor-pointer"
