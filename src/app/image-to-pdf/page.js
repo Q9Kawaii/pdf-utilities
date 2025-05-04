@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { PDFDocument } from 'pdf-lib';
@@ -8,7 +8,6 @@ import { PDFDocument } from 'pdf-lib';
 // Draggable image card component
 function DraggableImage({ imgObj, index, moveImage }) {
   const ref = useRef(null);
-
   const [, drop] = useDrop({
     accept: 'image',
     hover(item) {
@@ -17,7 +16,6 @@ function DraggableImage({ imgObj, index, moveImage }) {
       item.index = index;
     },
   });
-
   const [{ isDragging }, drag] = useDrag({
     type: 'image',
     item: { index },
@@ -25,9 +23,7 @@ function DraggableImage({ imgObj, index, moveImage }) {
       isDragging: monitor.isDragging(),
     }),
   });
-
   drag(drop(ref));
-
   return (
     <div
       ref={ref}
@@ -43,19 +39,38 @@ function DraggableImage({ imgObj, index, moveImage }) {
 export default function ImageToPdfPage() {
   const [imgFiles, setImgFiles] = useState([]);
   const [imgPdfMsg, setImgPdfMsg] = useState('Upload Images');
+  const inputRef = useRef(null);
 
-  // Handle image upload
-  const handleImgUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setImgFiles(files.map((file, idx) => ({
-      id: `${file.name}-${idx}`,
-      file,
-      url: URL.createObjectURL(file),
-    })));
-    setImgPdfMsg('Images uploaded! Drag to reorder, then create PDF.');
+  const openFilePicker = () => {
+    if (inputRef.current) {
+      inputRef.current.value = ''; // Always clear before open
+      inputRef.current.click();
+    }
   };
 
-  // Move image in array
+  const handleImgUpload = (e) => {
+    const files = e.target.files;
+    if (!files || !files.length) {
+      console.log('No files selected');
+      return;
+    }
+  
+    const selectedFiles = Array.from(files);
+    const imgObjs = selectedFiles.map((file, idx) => ({
+      id: `${file.name}-${idx}-${Date.now()}`,
+      file,
+      url: URL.createObjectURL(file),
+    }));
+  
+    setImgFiles(imgObjs);
+    setImgPdfMsg('Images uploaded! Drag to reorder, then create PDF.');
+  
+    // ❌ Do NOT reset e.target.value on mobile. Causes gallery bugs.
+    // e.target.value = '';  // REMOVE THIS LINE
+  };
+  
+  
+
   const moveImage = useCallback((from, to) => {
     setImgFiles((prev) => {
       const updated = [...prev];
@@ -65,7 +80,6 @@ export default function ImageToPdfPage() {
     });
   }, []);
 
-  // Convert images to PDF
   const handleImagesToPdf = async () => {
     if (!imgFiles.length) return;
     const pdfDoc = await PDFDocument.create();
@@ -100,33 +114,29 @@ export default function ImageToPdfPage() {
         <h2 className="text-4xl font-semibold mb-6">Image to PDF</h2>
         <div className="flex gap-4 mb-7">
         <input
+  ref={inputRef}
   type="file"
   accept="image/*"
-  capture="environment"
   multiple
   onChange={handleImgUpload}
   className="hidden"
   id="imgUpload"
 />
 
-          <label
-            htmlFor="imgUpload"
+          <button
+            type="button"
+            onClick={openFilePicker}
             className="text-xl bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-blue-500 transition cursor-pointer"
           >
             {imgPdfMsg}
-          </label>
+          </button>
         </div>
 
         {imgFiles.length > 0 && (
           <>
             <div className="flex flex-wrap gap-2 mb-6">
               {imgFiles.map((imgObj, idx) => (
-                <DraggableImage
-                  key={imgObj.id}
-                  imgObj={imgObj}
-                  index={idx}
-                  moveImage={moveImage}
-                />
+                <DraggableImage key={imgObj.id} imgObj={imgObj} index={idx} moveImage={moveImage} />
               ))}
             </div>
             <button

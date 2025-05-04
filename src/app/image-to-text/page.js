@@ -74,18 +74,15 @@ export default function ImageToTextPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <h2 className="text-4xl font-semibold mb-6">Extract Text from Image (OCR)</h2>
+      <h2 className="text-3xl font-semibold mb-6 text-center">Extract Text from Image (OCR)</h2>
       <div className="flex gap-4 mb-7">
-      <input
-  type="file"
-  accept="image/*"
-  capture="environment"
-  multiple
-  onChange={handleImgUpload}
-  className="hidden"
-  id="imgUpload"
-/>
-
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+          id="imgUpload"
+        />
         <label
           htmlFor="imgUpload"
           className="text-xl bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-blue-500 transition cursor-pointer"

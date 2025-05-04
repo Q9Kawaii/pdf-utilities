@@ -15,11 +15,11 @@ export default function BlobBackground() {
         ],
       }}
       transition={{
-        duration: 15,
+        duration: 10,
         repeat: Infinity,
         repeatType: "mirror",
       }}
-      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600 border-[40px] border-fuchsia-700 opacity-40 z-[-1] blur-3xl
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600 border-[40px] border-fuchsia-700 opacity-50 z-[-1] blur-3xl
       lg:w-[800px] lg:h-[800px]
       "
     />
